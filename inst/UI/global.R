@@ -4,18 +4,8 @@
 #' shiny::runApp('./inst/UI/', launch.browser =  TRUE)
 # ==========================================================================
 
-#! Packages, functions
-sapply(
-  c(
-    "gpxui",
-    "leaflet",
-    "bs4Dash",
-    "sf"
-  ),
-  require,
-  character.only = TRUE,
-  quietly = TRUE
-)
+# ! Packages, functions
+require(gpxui)
 
 cleandb <- function(db = DB) {
   if (db == "tests") {
@@ -36,5 +26,4 @@ cnf_path <- Sys.getenv("GPXUI_CNF")
 group <- "localhost"
 DB <- "tests"
 
-
-cleandb()
+# cleandb()

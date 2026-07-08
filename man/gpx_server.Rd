@@ -4,12 +4,12 @@
 \alias{gpx_server}
 \title{GPX Shiny Server}
 \usage{
-gpx_server(server = "localhost", db = "tests")
+gpx_server(.cnf = NULL, group = NULL)
 }
 \arguments{
-\item{server}{Deprecated alias for the MariaDB option-file \code{group}.}
+\item{.cnf}{Path to a MariaDB option file passed to \code{\link[=db_con]{db_con()}}.}
 
-\item{db}{Database/schema selected after connecting.}
+\item{group}{Option group in \code{.cnf} passed to \code{\link[=db_con]{db_con()}}.}
 }
 \value{
 A Shiny server function.

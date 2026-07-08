@@ -4,7 +4,7 @@
 \alias{db_con}
 \title{Create a MariaDB Connection}
 \usage{
-db_con(.cnf = NULL, group = NULL, db = NULL)
+db_con(.cnf = NULL, group = NULL)
 }
 \arguments{
 \item{.cnf}{Path to a MariaDB option file. If \code{NULL}, resolved from
@@ -12,8 +12,6 @@ db_con(.cnf = NULL, group = NULL, db = NULL)
 
 \item{group}{Option group in \code{.cnf}. If \code{NULL}, resolved from global
 \code{group} or \code{"gpxui"}.}
-
-\item{db}{Optional database/schema selected after connecting.}
 }
 \value{
 A MariaDB connection.
@@ -27,4 +25,6 @@ environment, then for the \code{GPXUI_CNF} environment variable.
 
 If \code{group} is \code{NULL}, \code{db_con()} first looks for \code{group} in the global
 environment, then uses \code{"gpxui"}.
+
+The database/schema should be configured in the selected option group.
 }

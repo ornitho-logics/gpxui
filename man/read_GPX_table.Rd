@@ -6,8 +6,6 @@
 Fetch database tables}
 \usage{
 read_GPX_table(
-  server = NULL,
-  db,
   tab,
   dt = "1900-01-01",
   gps_id,
@@ -17,10 +15,6 @@ read_GPX_table(
 )
 }
 \arguments{
-\item{server}{Deprecated alias for \code{group}.}
-
-\item{db}{Database/schema selected after connecting.}
-
 \item{tab}{database table   (GPS_TRACKS, GPS_POINTS)}
 
 \item{dt}{database valid datetime. Only entries after this are returned. Default to "1900-01-01"}

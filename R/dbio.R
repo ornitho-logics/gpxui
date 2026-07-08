@@ -8,15 +8,16 @@
 #' If `group` is `NULL`, `db_con()` first looks for `group` in the global
 #' environment, then uses `"gpxui"`.
 #'
+#' The database/schema should be configured in the selected option group.
+#'
 #' @param .cnf Path to a MariaDB option file. If `NULL`, resolved from
 #'   `cnf_path` or `GPXUI_CNF`.
 #' @param group Option group in `.cnf`. If `NULL`, resolved from global
 #'   `group` or `"gpxui"`.
-#' @param db Optional database/schema selected after connecting.
 #'
 #' @return A MariaDB connection.
 #' @export
-db_con <- function(.cnf = NULL, group = NULL, db = NULL) {
+db_con <- function(.cnf = NULL, group = NULL) {
   if (is.null(.cnf)) {
     if (exists("cnf_path", envir = .GlobalEnv, inherits = FALSE)) {
       .cnf <- get("cnf_path", envir = .GlobalEnv)
@@ -44,20 +45,11 @@ db_con <- function(.cnf = NULL, group = NULL, db = NULL) {
     stop("`group` must be a non-empty string.", call. = FALSE)
   }
 
-  con <- DBI::dbConnect(
+  DBI::dbConnect(
     drv = RMariaDB::MariaDB(),
     default.file = path.expand(.cnf),
     group = group
   )
-
-  if (!is.null(db) && nzchar(db)) {
-    DBI::dbExecute(
-      con,
-      paste("USE", DBI::dbQuoteIdentifier(con, db))
-    )
-  }
-
-  con
 }
 
 #' Run a MariaDB Query and Return a Data Table
@@ -83,8 +75,6 @@ db_get <- function(query, ..., params = NULL) {
 
 #' gpx_to_database
 #' saves new entries to database
-#' @param server Deprecated alias for `group`.
-#' @param db Database/schema selected after connecting.
 #' @param x output of [gpxui::read_all_waypoints()] or [gpxui::read_all_tracks()].
 #' @param tab database table (GPS_TRACKS, GPS_POINTS)
 #' @param .cnf Path to a MariaDB option file passed to [db_con()].
@@ -92,19 +82,13 @@ db_get <- function(query, ..., params = NULL) {
 #' @return a data.frame containing last entry in db prior to database update and the number of updated entries.
 #' @export
 gpx_to_database <- function(
-  server = NULL,
-  db,
   x,
   tab,
   .cnf = NULL,
   group = NULL
 ) {
-  if (is.null(group)) {
-    group <- server
-  }
-
   if (!is.null(x) && nrow(x) > 0) {
-    con <- db_con(.cnf = .cnf, group = group, db = db)
+    con <- db_con(.cnf = .cnf, group = group)
     on.exit(DBI::dbDisconnect(con))
 
     gid <- x$gps_id[1]
@@ -155,8 +139,6 @@ gpx_to_database <- function(
 
 #' read_GPX_table
 #' Fetch database tables
-#' @param server Deprecated alias for `group`.
-#' @param db Database/schema selected after connecting.
 #' @param tab database table   (GPS_TRACKS, GPS_POINTS)
 #' @param dt  database valid datetime. Only entries after this are returned. Default to "1900-01-01"
 #' @param gps_id  gps id (one or more). Disregarded when missing, NA, NULL or non-numeric
@@ -165,8 +147,6 @@ gpx_to_database <- function(
 #' @param group Option group in `.cnf` passed to [db_con()].
 #' @export
 read_GPX_table <- function(
-  server = NULL,
-  db,
   tab,
   dt = "1900-01-01",
   gps_id,
@@ -174,10 +154,6 @@ read_GPX_table <- function(
   .cnf = NULL,
   group = NULL
 ) {
-  if (is.null(group)) {
-    group <- server
-  }
-
   if (!missing(gps_id)) {
     gps_id <- as.numeric(gps_id) |> unique() |> na.omit()
   }
@@ -188,7 +164,7 @@ read_GPX_table <- function(
     sql <- glue("{sql} AND gps_id IN ( {paste(gps_id, collapse = ',')} )")
   }
 
-  o <- db_get(sql, .cnf = .cnf, group = group, db = db)
+  o <- db_get(sql, .cnf = .cnf, group = group)
 
   if (sf & nrow(o) > 0) {
     o <- st_as_sf(o, coords = c("lon", "lat"), crs = 4326)
@@ -204,8 +180,6 @@ read_GPX_table <- function(
 
 #' Export a GPX Database Table
 #'
-#' @param server Deprecated alias for `group`.
-#' @param db Database/schema selected after connecting.
 #' @param tab Database table or view to export.
 #' @param file Output file path ending in `.gpx` or `.csv`.
 #' @param .cnf Path to a MariaDB option file passed to [db_con()].
@@ -215,18 +189,12 @@ read_GPX_table <- function(
 #'   invisibly returns `NULL`.
 #' @export
 gpx_export <- function(
-  server = NULL,
-  db,
   tab,
   file,
   .cnf = NULL,
   group = NULL
 ) {
-  if (is.null(group)) {
-    group <- server
-  }
-
-  con <- db_con(.cnf = .cnf, group = group, db = db)
+  con <- db_con(.cnf = .cnf, group = group)
   on.exit(DBI::dbDisconnect(con))
 
   x <- DBI::dbReadTable(con, tab) |> setDT()

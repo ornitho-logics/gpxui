@@ -1,9 +1,9 @@
 
 
 # populate db tables in case they are empty
-gpx_to_database(server = "localhost", db = "tests", read_all_waypoints(dirout_valid), tab = "GPS_POINTS")
+gpx_to_database(read_all_waypoints(dirout_valid), tab = "GPS_POINTS")
 
-gpx_to_database(server = "localhost", db = "tests", read_all_tracks(dirout_valid), tab = "GPS_TRACKS")
+gpx_to_database(read_all_tracks(dirout_valid), tab = "GPS_TRACKS")
 
 
 
@@ -16,8 +16,8 @@ test_that("as_dirInput_output() returns a df", {
 
 test_that("st_bbox_all() works in all cases", {
 
-  pts = read_GPX_table(server = "localhost", db = "tests", "GPS_POINTS", sf = TRUE)
-  trk = read_GPX_table(server = "localhost", db = "tests", "GPS_TRACKS", sf = TRUE)
+  pts = read_GPX_table("GPS_POINTS", sf = TRUE)
+  trk = read_GPX_table("GPS_TRACKS", sf = TRUE)
   
   st_bbox_all(list(pts, trk)) |> expect_s3_class("bbox")
   
@@ -30,8 +30,8 @@ test_that("st_bbox_all() works in all cases", {
   st_bbox_all(list(empty_sf)) |> expect_s3_class("bbox")
 
   cleandb()
-  pts = read_GPX_table(server = "localhost", db = "tests", "GPS_POINTS", sf = TRUE)
-  trk = read_GPX_table(server = "localhost", db = "tests", "GPS_TRACKS", sf = TRUE)
+  pts = read_GPX_table("GPS_POINTS", sf = TRUE)
+  trk = read_GPX_table("GPS_TRACKS", sf = TRUE)
 
   st_bbox_all(list(pts, trk)) |> expect_s3_class("bbox")
 

@@ -7,14 +7,12 @@
 # ! Packages, functions
 require(gpxui)
 
-cleandb <- function(db = DB) {
-  if (db == "tests") {
-    con <- db_con(db = db)
-    DBI::dbExecute(con, "TRUNCATE GPS_POINTS")
-    DBI::dbExecute(con, "TRUNCATE GPS_TRACKS")
-    DBI::dbDisconnect(con)
-    message("GPS_POINTS & GPS_TRACKS tables are empty now.")
-  }
+cleandb <- function() {
+  con <- db_con()
+  DBI::dbExecute(con, "TRUNCATE GPS_POINTS")
+  DBI::dbExecute(con, "TRUNCATE GPS_TRACKS")
+  DBI::dbDisconnect(con)
+  message("GPS_POINTS & GPS_TRACKS tables are empty now.")
 }
 
 #! Options
@@ -23,7 +21,9 @@ options(shiny.maxRequestSize = 10 * 1024^3)
 
 #* Variables
 cnf_path <- Sys.getenv("GPXUI_CNF")
-group <- "localhost"
-DB <- "tests"
+group <- Sys.getenv("GPXUI_GROUP")
+if (!nzchar(group)) {
+  group <- "gpxui"
+}
 
 # cleandb()

@@ -4,13 +4,9 @@
 \alias{gpx_export}
 \title{Export a GPX Database Table}
 \usage{
-gpx_export(server = NULL, db, tab, file, .cnf = NULL, group = NULL)
+gpx_export(tab, file, .cnf = NULL, group = NULL)
 }
 \arguments{
-\item{server}{Deprecated alias for \code{group}.}
-
-\item{db}{Database/schema selected after connecting.}
-
 \item{tab}{Database table or view to export.}
 
 \item{file}{Output file path ending in \code{.gpx} or \code{.csv}.}

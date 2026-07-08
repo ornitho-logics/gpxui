@@ -1,13 +1,13 @@
 #' GPX Shiny Server
 #'
-#' @param server Deprecated alias for the MariaDB option-file `group`.
-#' @param db Database/schema selected after connecting.
+#' @param .cnf Path to a MariaDB option file passed to [db_con()].
+#' @param group Option group in `.cnf` passed to [db_con()].
 #'
 #' @return A Shiny server function.
 #' @export
-gpx_server <- function(server = "localhost", db = "tests") {
-  force(server)
-  force(db)
+gpx_server <- function(.cnf = NULL, group = NULL) {
+  force(.cnf)
+  force(group)
 
   function(input, output, session) {
     session$allowReconnect(TRUE)
@@ -23,16 +23,16 @@ gpx_server <- function(server = "localhost", db = "tests") {
 
       # update new data to db
       updated_pts <- gpx_to_database(
-        server = server,
-        db = db,
-        pts,
-        tab = "GPS_POINTS"
+        x = pts,
+        tab = "GPS_POINTS",
+        .cnf = .cnf,
+        group = group
       )
       updated_trk <- gpx_to_database(
-        server = server,
-        db = db,
-        trk,
-        tab = "GPS_TRACKS"
+        x = trk,
+        tab = "GPS_TRACKS",
+        .cnf = .cnf,
+        group = group
       )
 
       rbindlist(list(updated_pts, updated_trk))
@@ -67,17 +67,17 @@ gpx_server <- function(server = "localhost", db = "tests") {
     # on upload
     observeEvent(input$upload_GPX, {
       pts <- read_GPX_table(
-        server,
-        db,
-        "GPS_POINTS",
-        input$last_pts_dt,
+        tab = "GPS_POINTS",
+        dt = input$last_pts_dt,
+        .cnf = .cnf,
+        group = group,
         sf = TRUE
       )
       trk <- read_GPX_table(
-        server,
-        db,
-        "GPS_TRACKS",
-        input$last_trk_dt,
+        tab = "GPS_TRACKS",
+        dt = input$last_trk_dt,
+        .cnf = .cnf,
+        group = group,
         sf = TRUE
       )
       bbox <- st_bbox_all(list(pts, trk))
@@ -89,19 +89,19 @@ gpx_server <- function(server = "localhost", db = "tests") {
     # on explore
     observeEvent(input$go_explore, {
       pts <- read_GPX_table(
-        server,
-        db,
-        "GPS_POINTS",
-        input$show_after,
-        input$gps_id,
+        tab = "GPS_POINTS",
+        dt = input$show_after,
+        gps_id = input$gps_id,
+        .cnf = .cnf,
+        group = group,
         sf = TRUE
       )
       trk <- read_GPX_table(
-        server,
-        db,
-        "GPS_TRACKS",
-        input$show_after,
-        input$gps_id,
+        tab = "GPS_TRACKS",
+        dt = input$show_after,
+        gps_id = input$gps_id,
+        .cnf = .cnf,
+        group = group,
         sf = TRUE
       )
       bbox <- st_bbox_all(list(pts, trk))
@@ -136,19 +136,19 @@ gpx_server <- function(server = "localhost", db = "tests") {
       if (nchar(input$last_trk_dt) > 0 || nchar(input$last_pts_dt) > 0) {
         e2 <- gpx_summary(
           read_GPX_table(
-            server,
-            db,
-            "GPS_POINTS",
-            input$last_pts_dt,
-            input$gps_id,
+            tab = "GPS_POINTS",
+            dt = input$last_pts_dt,
+            gps_id = input$gps_id,
+            .cnf = .cnf,
+            group = group,
             sf = TRUE
           ),
           read_GPX_table(
-            server,
-            db,
-            "GPS_TRACKS",
-            input$last_trk_dt,
-            input$gps_id,
+            tab = "GPS_TRACKS",
+            dt = input$last_trk_dt,
+            gps_id = input$gps_id,
+            .cnf = .cnf,
+            group = group,
             sf = TRUE
           )
         )
@@ -168,7 +168,12 @@ gpx_server <- function(server = "localhost", db = "tests") {
         glue("{input$export_object}.{input$export_class}")
       },
       content = function(file) {
-        gpx_export(server = server, db = db, input$export_object, file)
+        gpx_export(
+          tab = input$export_object,
+          file = file,
+          .cnf = .cnf,
+          group = group
+        )
       }
     )
   }

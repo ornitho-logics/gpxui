@@ -31,37 +31,58 @@
 #' @export
 
 read_waypoints <- function(x) {
-  
-  w = try(st_read(x, layer = "waypoints", quiet = TRUE), silent = TRUE)
+  w <- try(st_read(x, layer = "waypoints", quiet = TRUE), silent = TRUE)
   if (inherits(w, "sf")) {
-    xy = st_coordinates(w) |> data.table()
+    xy <- st_coordinates(w) |> data.table()
     setnames(xy, c("lon", "lat"))
-    d = st_drop_geometry(w) |> setDT()
-    d = d[, .(gps_point = name, datetime_ = time, ele)]
-    o = cbind(d, xy)
-    if(nrow(o) == 0) message(basename(x) |> dQuote(), " does not contain any points!")
+    d <- st_drop_geometry(w) |> setDT()
+    d <- d[, .(gps_point = name, datetime_ = time, ele)]
+    o <- cbind(d, xy)
+    if (nrow(o) == 0) {
+      message(basename(x) |> dQuote(), " does not contain any points!")
+    }
   } else {
     warning(basename(x) |> dQuote(), " is empty or corrupt!")
-    o = data.table(gps_point = character(), datetime_ = as.POSIXct(NULL), ele = numeric(), lon = numeric(), lat = numeric())
+    o <- data.table(
+      gps_point = character(),
+      datetime_ = as.POSIXct(NULL),
+      ele = numeric(),
+      lon = numeric(),
+      lat = numeric()
+    )
   }
-  
+
   o
 }
 
 #' @rdname read_gpx
 #' @export
 read_tracks <- function(x) {
-  w = try(st_read(x, layer = "track_points", quiet = TRUE), silent = TRUE)
+  w <- try(st_read(x, layer = "track_points", quiet = TRUE), silent = TRUE)
   if (inherits(w, "sf")) {
-    xy = st_coordinates(w) |> data.table()
+    xy <- st_coordinates(w) |> data.table()
     setnames(xy, c("lon", "lat"))
-    d = st_drop_geometry(w) |> setDT()
-    d = d[, .(seg_id = track_seg_id, seg_point_id = track_seg_point_id, datetime_ = time, ele)]
-    o = cbind(d, xy)
-    if(nrow(o) == 0) message(basename(x) |> dQuote(), " does not contain any tracks!")
+    d <- st_drop_geometry(w) |> setDT()
+    d <- d[, .(
+      seg_id = track_seg_id,
+      seg_point_id = track_seg_point_id,
+      datetime_ = time,
+      ele
+    )]
+    o <- cbind(d, xy)
+    if (nrow(o) == 0) {
+      message(basename(x) |> dQuote(), " does not contain any tracks!")
+    }
   } else {
-     warning(basename(x) |> dQuote(), " is empty or corrupt!")
-    o = data.table(seg_id=integer(),seg_point_id=integer(),datetime_=as.POSIXct(NULL),ele=numeric(),lon=numeric(),lat=numeric())
+    warning(basename(x) |> dQuote(), " is empty or corrupt!")
+    o <- data.table(
+      seg_id = integer(),
+      seg_point_id = integer(),
+      datetime_ = as.POSIXct(NULL),
+      ele = numeric(),
+      lon = numeric(),
+      lat = numeric()
+    )
   }
   o
 }
@@ -71,17 +92,18 @@ read_tracks <- function(x) {
 #' @param x a data.frame  uploaded to the server by dirInput
 #' @export
 deviceID <- function(x) {
-  z = data.table(x)
-  path_to_id = z[name == "DEVICE_ID.txt",datapath]
+  z <- data.table(x)
+  path_to_id <- z[name == "DEVICE_ID.txt", datapath]
 
-  o = try(
-    readLines(path_to_id)[1] |> 
+  o <- try(
+    readLines(path_to_id)[1] |>
       as.numeric(),
     silent = TRUE
   )
 
-
-  if (inherits(o, "try-error")) o <- NA
+  if (inherits(o, "try-error")) {
+    o <- NA
+  }
 
   o
 }
@@ -89,77 +111,70 @@ deviceID <- function(x) {
 
 #' read_all_waypoints
 #' @description  read all waypoints from the GPX directory and the gps id from DEVICE_ID.txt when it exists
-#' @param  ff  a data.frame  uploaded to the server by dirInput or 
-#'             a directory path containing gpx files. 
+#' @param  ff  a data.frame  uploaded to the server by dirInput or
+#'             a directory path containing gpx files.
 #' @param int_names_only keep only numeric names
 #' @export
 #' @examples
 #' g = system.file("Garmin65s", package = "gpxui") |> read_all_waypoints()
-read_all_waypoints <- function(ff,int_names_only = TRUE) {
-
-
-  if( !inherits(ff, 'data.frame') && fs::dir_exists(ff) ){
-    ff = data.frame(
+read_all_waypoints <- function(ff, int_names_only = TRUE) {
+  if (!inherits(ff, 'data.frame') && fs::dir_exists(ff)) {
+    ff <- data.frame(
       datapath = list.files(ff, full.names = TRUE, recursive = TRUE)
     )
-    ff$name = basename(ff$datapath)
+    ff$name <- basename(ff$datapath)
   }
-  gid = deviceID(ff)
+  gid <- deviceID(ff)
 
-  ff = ff$datapath
-  ff = ff[basename(ff) |> str_detect("gpx$")]
+  ff <- ff$datapath
+  ff <- ff[basename(ff) |> str_detect("gpx$")]
 
   if (length(ff) > 0) {
-    o = lapply(ff, read_waypoints) |>
+    o <- lapply(ff, read_waypoints) |>
       rbindlist()
     o[, gps_id := gid]
 
     if (int_names_only) {
       o[, gps_point := as.integer(gps_point)]
-      o = o[!is.na(gps_point)]
+      o <- o[!is.na(gps_point)]
     }
 
     setcolorder(o, "gps_id")
-
   } else {
-    o = NULL
+    o <- NULL
   }
 
   o
-
 }
 
 #' read_all_tracks
 #' @description  read all tracks from the GPX directory and the gps id from DEVICE_ID.txt when it exists
 #' @param  ff  a data.frame  uploaded to the server by dirInput or
-#'             a directory path containing gpx files.  
+#'             a directory path containing gpx files.
 #' @export
 #' @examples
 #' g = system.file("Garmin65s", package = "gpxui") |> read_all_tracks()
 read_all_tracks <- function(ff) {
-
-  if( !inherits(ff, 'data.frame') && fs::dir_exists(ff) ){
-    ff = data.frame(
+  if (!inherits(ff, 'data.frame') && fs::dir_exists(ff)) {
+    ff <- data.frame(
       datapath = list.files(ff, full.names = TRUE, recursive = TRUE)
     )
-    ff$name = basename(ff$datapath)
+    ff$name <- basename(ff$datapath)
   }
-  gid = deviceID(ff)
+  gid <- deviceID(ff)
 
-  ff = ff$datapath
-  ff = ff[basename(ff) |> str_detect("gpx$")]
+  ff <- ff$datapath
+  ff <- ff[basename(ff) |> str_detect("gpx$")]
 
   if (length(ff) > 0) {
-  o = lapply(ff, read_tracks) |>
-    rbindlist()
-  o[, gps_id := gid]
+    o <- lapply(ff, read_tracks) |>
+      rbindlist()
+    o[, gps_id := gid]
 
-  setcolorder(o, "gps_id")
-
-    } else  {
-      o = NULL
+    setcolorder(o, "gps_id")
+  } else {
+    o <- NULL
   }
 
   o
-
 }

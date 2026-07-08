@@ -2,10 +2,18 @@
 % Please edit documentation in R/ui_modules.R
 \name{gpx_summary}
 \alias{gpx_summary}
-\title{gpx_summary}
+\title{Build a GPX Summary Panel}
 \usage{
 gpx_summary(pts, trk)
 }
+\arguments{
+\item{pts}{An \code{sf} waypoint object.}
+
+\item{trk}{An \code{sf} track object.}
+}
+\value{
+A Shiny tag object containing summary tables.
+}
 \description{
-gpx_summary
+Build a GPX Summary Panel
 }

@@ -9,6 +9,9 @@ gpx_file_upload_check(x)
 \arguments{
 \item{x}{a data.frame returned by UI after dir upload. See \code{\link[=dirInput]{dirInput()}}}
 }
+\value{
+A Shiny tag object describing the selected directory.
+}
 \description{
 gpx_file_upload_check
 }

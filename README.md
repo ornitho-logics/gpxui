@@ -8,4 +8,4 @@ remotes::install_github("mpio-be/gpxui")
 ```
 
 
-![gpxui](gpxui.png)
+![gpxui](man/figures/gpxui.png)

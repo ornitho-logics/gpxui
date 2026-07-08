@@ -1,31 +1,34 @@
 Package: gpxui
-Title: Read and Show GPX Files.
-Version: 0.0.3
+Title: Read and Show GPX Files
+Version: 1.0.0
 Authors@R: 
     person("Mihai", "Valcu", , "Mihai.Valcu@bi.mpg.de", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-6907-7802"))
-Description: Read and display waypoints and tracks from GPX files in a given directory. When the directory is on a Garmin GPS some info regarding the GPS is retrieved as well. 
+Description: Read and display waypoints and tracks from GPX files in a given directory. When the directory is on a Garmin GPS some info regarding the GPS is retrieved as well.
 Depends:
-    R (>= 3.0.0),
-    shiny,
-    data.table,
-    dbo
+    R (>= 4.1.0)
 Imports:
-    methods,
-    glue,
-    stringr,
-    sf,
-    xml2,
-    leaflet,
     bs4Dash,
-    shinycssloaders
-Suggests:
+    data.table,
+    DBI,
+    dplyr,
+    fs,
+    glue,
     knitr,
+    leaflet,
+    methods,
+    rlang,
+    RMariaDB,
+    sf,
+    shiny,
+    shinycssloaders,
+    stringr,
+    units,
+    xml2
+Suggests:
     testthat (>= 3.0.0)
-Remotes:
-    mpio-be/dbo
 License: GPL (>= 2)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.2
 Config/testthat/edition: 3
+Config/roxygen2/version: 8.0.0

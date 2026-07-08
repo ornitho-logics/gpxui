@@ -2,10 +2,20 @@
 % Please edit documentation in R/ui_modules.R
 \name{ctrl_title}
 \alias{ctrl_title}
-\title{ctrl_title}
+\title{Sidebar Section Title}
 \usage{
 ctrl_title(txt, icon = "circle", class = "text-danger")
 }
+\arguments{
+\item{txt}{Title text.}
+
+\item{icon}{Font Awesome icon name passed to \code{\link[shiny:icon]{shiny::icon()}}.}
+
+\item{class}{CSS class applied to the title.}
+}
+\value{
+A Shiny tag object.
+}
 \description{
-ctrl_title
+Sidebar Section Title
 }

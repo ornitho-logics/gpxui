@@ -2,12 +2,20 @@
 % Please edit documentation in R/utils.R
 \name{as_dirInput_output}
 \alias{as_dirInput_output}
-\title{as_dirInput_output}
+\title{Convert a Directory to Shiny Upload-Like Rows}
 \usage{
 as_dirInput_output(dr)
 }
+\arguments{
+\item{dr}{Directory path to scan recursively.}
+}
+\value{
+A \code{data.frame} with \code{name} and \code{datapath} columns.
+}
 \description{
-as_dirInput_output
+\code{dirInput()} returns a data frame with file names and temporary paths. This
+helper creates the same shape from a local directory, which is useful in tests
+and non-interactive scripts.
 }
 \examples{
 system.file(package = "gpxui", "Garmin65s") |>

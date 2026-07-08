@@ -5,12 +5,21 @@
 \title{read_GPX_table
 Fetch database tables}
 \usage{
-read_GPX_table(server, db, tab, dt = "1900-01-01", gps_id, sf = FALSE)
+read_GPX_table(
+  server = NULL,
+  db,
+  tab,
+  dt = "1900-01-01",
+  gps_id,
+  sf = FALSE,
+  .cnf = NULL,
+  group = NULL
+)
 }
 \arguments{
-\item{server}{pass to \code{\link[dbo:dbcon]{dbo::dbcon()}}}
+\item{server}{Deprecated alias for \code{group}.}
 
-\item{db}{pass to \code{\link[dbo:dbcon]{dbo::dbcon()}}}
+\item{db}{Database/schema selected after connecting.}
 
 \item{tab}{database table   (GPS_TRACKS, GPS_POINTS)}
 
@@ -19,6 +28,10 @@ read_GPX_table(server, db, tab, dt = "1900-01-01", gps_id, sf = FALSE)
 \item{gps_id}{gps id (one or more). Disregarded when missing, NA, NULL or non-numeric}
 
 \item{sf}{when TRUE returns a sf df. default to FALSE}
+
+\item{.cnf}{Path to a MariaDB option file passed to \code{\link[=db_con]{db_con()}}.}
+
+\item{group}{Option group in \code{.cnf} passed to \code{\link[=db_con]{db_con()}}.}
 }
 \description{
 read_GPX_table

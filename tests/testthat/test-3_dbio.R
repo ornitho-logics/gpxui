@@ -2,8 +2,8 @@
 cleandb()
 
 test_that("gpx_to_database() works as expected on valid inputs", {
-  pp = read_all_waypoints(dirout)
-  tt = read_all_tracks(dirout)
+  pp = read_all_waypoints(dirout_valid)
+  tt = read_all_tracks(dirout_valid)
 
   # POINTS
   op = gpx_to_database(server = "localhost", db = "tests", pp, tab = "GPS_POINTS")
@@ -36,7 +36,7 @@ test_that("gpx_to_database() does not error on invalid inputs", {
   expect_true(o$rows_in_db_after_update == 0)
   
   # NA gps_id
-  pp = read_all_waypoints(dirout)[, gps_id := NA]
+  pp = read_all_waypoints(dirout_valid)[, gps_id := NA]
 
   o = gpx_to_database(server = "localhost", db = "tests", pp, tab = "GPS_POINTS")
   expect_s3_class(o, "data.frame")

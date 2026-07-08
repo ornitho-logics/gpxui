@@ -2,10 +2,27 @@
 % Please edit documentation in R/dbio.R
 \name{gpx_export}
 \alias{gpx_export}
-\title{gpx_export}
+\title{Export a GPX Database Table}
 \usage{
-gpx_export(server, db, tab, file)
+gpx_export(server = NULL, db, tab, file, .cnf = NULL, group = NULL)
+}
+\arguments{
+\item{server}{Deprecated alias for \code{group}.}
+
+\item{db}{Database/schema selected after connecting.}
+
+\item{tab}{Database table or view to export.}
+
+\item{file}{Output file path ending in \code{.gpx} or \code{.csv}.}
+
+\item{.cnf}{Path to a MariaDB option file passed to \code{\link[=db_con]{db_con()}}.}
+
+\item{group}{Option group in \code{.cnf} passed to \code{\link[=db_con]{db_con()}}.}
+}
+\value{
+For GPX output, the result of \code{\link[=DT2gpx]{DT2gpx()}}. For CSV output,
+invisibly returns \code{NULL}.
 }
 \description{
-gpx_export
+Export a GPX Database Table
 }

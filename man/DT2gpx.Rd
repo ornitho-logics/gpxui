@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{DT2gpx}
 \alias{DT2gpx}
-\title{DT2gpx}
+\title{Write Waypoints to GPX}
 \usage{
 DT2gpx(
   x,
@@ -13,6 +13,26 @@ DT2gpx(
   dest = tempfile(fileext = ".gpx")
 )
 }
+\arguments{
+\item{x}{A data frame or \code{data.table} containing waypoint data.}
+
+\item{nam}{Column containing waypoint names.}
+
+\item{longit}{Column containing longitudes.}
+
+\item{latit}{Column containing latitudes.}
+
+\item{symbol}{GPX symbol name to write for every waypoint.}
+
+\item{dest}{Output GPX file path.}
+}
+\value{
+\code{TRUE} when \code{dest} exists after writing, otherwise \code{FALSE}.
+}
 \description{
-DT2gpx
+Write Waypoints to GPX
+}
+\examples{
+points <- data.table::data.table(id = "A&B", lon = 11.57, lat = 48.14)
+DT2gpx(points, nam = "id")
 }

@@ -2,35 +2,48 @@
 % Please edit documentation in R/ui_modules.R
 \name{dirInput}
 \alias{dirInput}
-\title{dirInput}
+\title{Directory Input}
 \usage{
 dirInput(inputId, label = NULL, placeholder = "No dir selected.")
 }
+\arguments{
+\item{inputId}{Input id.}
+
+\item{label}{Optional label shown above the control.}
+
+\item{placeholder}{Placeholder text for the read-only text field.}
+}
+\value{
+A Shiny tag object.
+}
 \description{
-dirInput
+Create a browser directory upload control that returns the selected files as
+a Shiny file-input data frame.
 }
 \examples{
-require(shiny)
-options(shiny.maxRequestSize = 10 * 1024^3)
+if (interactive()) {
+  options(shiny.maxRequestSize = 10 * 1024^3)
 
-ui <- fluidPage(
-  sidebarLayout(
-    sidebarPanel(
-      dirInput("fileIn")
-    ),
-    mainPanel(
-      tableOutput("contents")
+  ui <- shiny::fluidPage(
+    shiny::sidebarLayout(
+      shiny::sidebarPanel(
+        dirInput("fileIn")
+      ),
+      shiny::mainPanel(
+        shiny::tableOutput("contents")
+      )
     )
   )
-)
-server <- function(input, output) {
-  output$contents <- renderTable({
-x = input$fileIn
-assign("x", x, '.GlobalEnv')
-print(input$fileIn)
-if(!is.null(input$fileIn))
-data.table(input$fileIn)[, file.size(datapath), by = name]
-  })
+
+  server <- function(input, output) {
+    output$contents <- shiny::renderTable({
+      if (is.null(input$fileIn)) {
+        return(NULL)
+      }
+      data.table::data.table(input$fileIn)[, file.size(datapath), by = name]
+    })
+  }
+
+  shiny::shinyApp(ui, server)
 }
-shinyApp(ui, server)
 }

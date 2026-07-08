@@ -2,10 +2,17 @@
 % Please edit documentation in R/ui_modules.R
 \name{track_summary}
 \alias{track_summary}
-\title{track_summary}
+\title{Summarise Tracks}
 \usage{
 track_summary(x)
 }
+\arguments{
+\item{x}{An \code{sf} track object returned by \code{\link[=read_GPX_table]{read_GPX_table()}} with
+\code{sf = TRUE}.}
+}
+\value{
+A \code{data.table} with display-ready summary rows.
+}
 \description{
-track_summary
+Summarise Tracks
 }

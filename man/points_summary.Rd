@@ -2,10 +2,17 @@
 % Please edit documentation in R/ui_modules.R
 \name{points_summary}
 \alias{points_summary}
-\title{points_summary}
+\title{Summarise Waypoints}
 \usage{
 points_summary(x)
 }
+\arguments{
+\item{x}{An \code{sf} waypoint object returned by \code{\link[=read_GPX_table]{read_GPX_table()}} with
+\code{sf = TRUE}.}
+}
+\value{
+A \code{data.table} with display-ready summary rows.
+}
 \description{
-points_summary
+Summarise Waypoints
 }

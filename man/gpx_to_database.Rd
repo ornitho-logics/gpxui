@@ -5,16 +5,20 @@
 \title{gpx_to_database
 saves new entries to database}
 \usage{
-gpx_to_database(server, db, x, tab)
+gpx_to_database(server = NULL, db, x, tab, .cnf = NULL, group = NULL)
 }
 \arguments{
-\item{server}{pass to \code{\link[dbo:dbcon]{dbo::dbcon()}}}
+\item{server}{Deprecated alias for \code{group}.}
 
-\item{db}{pass to \code{\link[dbo:dbcon]{dbo::dbcon()}}}
+\item{db}{Database/schema selected after connecting.}
 
 \item{x}{output of \code{\link[=read_all_waypoints]{read_all_waypoints()}} or \code{\link[=read_all_tracks]{read_all_tracks()}}.}
 
 \item{tab}{database table (GPS_TRACKS, GPS_POINTS)}
+
+\item{.cnf}{Path to a MariaDB option file passed to \code{\link[=db_con]{db_con()}}.}
+
+\item{group}{Option group in \code{.cnf} passed to \code{\link[=db_con]{db_con()}}.}
 }
 \value{
 a data.frame containing last entry in db prior to database update and the number of updated entries.

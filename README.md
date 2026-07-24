@@ -3,7 +3,7 @@
 A Garmin GPS manager. 
 
 ``` r
-remotes::install_github("mpio-be/gpxui")
+remotes::install_github("ornitho-logics/gpxui")
 
 ```
 

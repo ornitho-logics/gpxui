@@ -16,6 +16,8 @@ cleandb <- function() {
 #! Options
 options(shiny.maxRequestSize = 10 * 1024^3)
 
+GPS_IDS <- 1:20
+
 #* Variables
 cnf_path <- Sys.getenv("GPXUI_CNF")
 # group <- Sys.getenv("GPXUI_GROUP")

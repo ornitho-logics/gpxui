@@ -3,4 +3,133 @@
 .leaflet-tooltip {
   background-color: transparent;
   border: none;
+  pointer-events: none;
+}
+
+.content-wrapper > .content {
+  padding: 0;
+}
+
+.gpx-map-shell {
+  height: calc(100vh - 57px);
+  height: calc(100dvh - 57px);
+  min-height: 20rem;
+  overflow: hidden;
+}
+
+.gpx-map-shell > .leaflet {
+  height: 100% !important;
+  width: 100% !important;
+}
+
+.gpx-sidebar-section {
+  display: block;
+  padding: 0.75rem;
+}
+
+.gpx-sidebar-section + .gpx-sidebar-section {
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.gpx-sidebar-section > strong {
+  display: block;
+  margin-bottom: 0.75rem;
+}
+
+.gpx-sidebar-section .shiny-input-container {
+  margin-bottom: 0.75rem;
+  width: 100%;
+}
+
+.gpx-sidebar-button {
+  min-height: 2.75rem;
+  width: 100%;
+}
+
+.gpx-explore-button {
+  background-color: #e7debd;
+  border-color: #2e6da4;
+  color: #103c47;
+}
+
+.leaflet-control-layers-expanded {
+  max-height: calc(100vh - 7rem);
+  max-height: calc(100dvh - 7rem);
+  max-width: calc(100vw - 2rem);
+  overflow: auto;
+}
+
+.control-sidebar-content {
+  overflow-x: auto;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+@media (pointer: coarse) {
+  .leaflet-touch .leaflet-bar a,
+  .leaflet-touch .leaflet-control-layers-toggle {
+    height: 2.75rem;
+    line-height: 2.75rem;
+    width: 2.75rem;
+  }
+
+  .leaflet-control-layers-expanded {
+    font-size: 1rem;
+  }
+
+  .leaflet-control-layers label {
+    margin: 0;
+    padding: 0.35rem 0;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .main-header .nav-link {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    min-height: 2.75rem;
+    min-width: 2.75rem;
+  }
+
+  .main-sidebar .sidebar {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .main-sidebar,
+  .control-sidebar {
+    max-width: calc(100vw - 1rem);
+  }
+
+  .gpx-sidebar-section {
+    padding: 0.85rem 1rem;
+  }
+
+  .gpx-sidebar-section .form-control,
+  .gpx-sidebar-section .selectize-input {
+    font-size: 1rem;
+    min-height: 2.75rem;
+  }
+
+  .leaflet-control-attribution {
+    font-size: 0.6rem;
+    max-width: 75vw;
+  }
+
+  .leaflet-popup-content {
+    max-width: calc(100vw - 5rem);
+  }
+
+  .leaflet-tooltip {
+    font-size: 0.75rem;
+  }
+}
+
+@supports (padding: max(0px)) {
+  .leaflet-left {
+    left: env(safe-area-inset-left);
+  }
+
+  .leaflet-right {
+    right: env(safe-area-inset-right);
+  }
 }

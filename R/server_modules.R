@@ -4,11 +4,23 @@
 #' @export
 basemap <- function() {
   leaflet::leaflet(options = leaflet::leafletOptions(zoomControl = TRUE)) |>
-    leaflet::addTiles(group = "OSM") |>
+    leaflet::addProviderTiles(
+      leaflet::providers$CartoDB.PositronNoLabels,
+      group = "Print Map"
+    ) |>
+    leaflet::addProviderTiles(
+      leaflet::providers$OpenStreetMap,
+      group = "Street Map"
+    ) |>
+    leaflet::addProviderTiles(
+      leaflet::providers$Esri.WorldImagery,
+      group = "Satellite"
+    ) |>
     leaflet::addLayersControl(
+      baseGroups = c("Print Map", "Street Map", "Satellite"),
       overlayGroups = c("Tracks", "Points"),
       position = "topleft",
-      options = leaflet::layersControlOptions(collapsed = FALSE)
+      options = leaflet::layersControlOptions(collapsed = TRUE)
     ) |>
     leaflet::setView(sample(-150:150, 1), sample(-60:60, 1), zoom = 2)
 }
@@ -24,7 +36,7 @@ basemap <- function() {
 #' @return A `leaflet` map or proxy object.
 #' @export
 gpxmap <- function(MAP, bbox, pts, trk, zoom = TRUE) {
-  bbox <- .leaflet_bbox(bbox)
+  bbox <- .leaflet_bbox(bbox) |> unname()
 
   MAP <- MAP |>
     leaflet::clearShapes() |>
